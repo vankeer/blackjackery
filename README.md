@@ -1,8 +1,16 @@
-# blackjackery
+# Blackjackery #
+
+A simplified multiplayer blackjack webgame written in ES6 using AngularJS and Express. 
+
+Made as an exercise in rapid prototyping, WebSockets, and using the (M)EAN stack to create a functional MVP in hours.
+
+## Demo
+
+[Click here for a demo](https://blackjackery.herokuapp.com/)
+
+## Installation and Use
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.2.0.
-
-## Getting Started
 
 ### Prerequisites
 
@@ -14,16 +22,72 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 ### Developing
 
-1. Run `npm install` to install server dependencies.
+ 1. Run `npm install` to install server dependencies.
+ 2. Run `bower install` to install front-end dependencies.
+ 3. Run `grunt serve` to start the development server. It should automatically open the client in your browser when ready.
 
-2. Run `bower install` to install front-end dependencies.
-
-3. Run `grunt serve` to start the development server. It should automatically open the client in your browser when ready.
-
-## Build & development
+### Build & development
 
 Run `grunt build` for building and `grunt serve` for preview.
 
-## Testing
+### Testing
 
 Running `npm test` will run the unit tests with karma.
+
+## Features
+
+ - 1 table
+ - 1 dealer with 1 standard deck
+ - up to 7 players
+	 - if the table is full, new players are put in a wait queue
+ - a new game is started as soon as there is at least 1 player connected
+ - losses and wins are counted (no betting)
+ - players can either hit or stick (no splitting)
+
+## Wireframe
+
+![First wireframe](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-wireframe.png)
+
+## Game flow
+
+![Game flow](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-gameflow.png)
+
+## Player state
+
+![Player state](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-playerstate.png)
+
+## Implementation
+
+I've opted to use a Yeoman generator to quickly scaffold a MEAN app: [generator-angular-fullstack](https://github.com/angular-fullstack/generator-angular-fullstack)
+
+Client-side is a simple Angular app and consists of just 1 view with a controller, a service for tracking the game state, and a service for the socket connections.
+
+Server-side is an Express app. The game state is kept in memory with the Game module and is expressed using a simple model:
+
+![Class diagram](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-model.png)
+
+For every new client connected, there is a player.socket.js handler that deals with joining and other actions.
+
+The dealer.socket.js handler checks the game state every X ms and changes the game & player states accordingly (see above).
+
+## Backlog
+
+High prio
+
+ - Timer for actions (otherwise players can join and block the game)
+ - Show value of current hand
+ - Show player and dealer scores
+ - Show system messages
+
+Medium
+
+- Better UI (flash changes to model)
+- Show people in wait queue
+
+Low prio
+
+- Option to split cards
+- Betting
+- Multiple tables
+- Card animations
+- Store games and scores in a MongoDB database

@@ -46,15 +46,15 @@ Running `npm test` will run the unit tests with karma.
 
 ## Wireframe
 
-![First wireframe](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-wireframe.png)
+![First wireframe](https://cloud.githubusercontent.com/assets/4358650/12532369/b7806fa6-c212-11e5-8335-3010ef8ba5f3.png)
 
 ## Game flow
 
-![Game flow](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-gameflow.png)
+![Game flow](https://cloud.githubusercontent.com/assets/4358650/12532366/b7573bfe-c212-11e5-84f4-8f3310841ae7.png)
 
 ## Player state
 
-![Player state](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-playerstate.png)
+![Player state](https://cloud.githubusercontent.com/assets/4358650/12532368/b77e2c82-c212-11e5-8e5e-64f3e9089a50.png)
 
 ## Implementation
 
@@ -64,7 +64,7 @@ Client-side is a simple Angular app and consists of just 1 view with a controlle
 
 Server-side is an Express app. The game state is kept in memory with the Game module and is expressed using a simple model:
 
-![Class diagram](https://googledrive.com/host/0B-n1VkKHMAZ8aDZydmpLVWJtN0U/blackjackery-model.png)
+![Class diagram](https://cloud.githubusercontent.com/assets/4358650/12532367/b76f70fc-c212-11e5-968c-be6f502e435a.png)
 
 For every new client connected, there is a player.socket.js handler that deals with joining and other actions.
 

@@ -54,10 +54,13 @@ class Table {
     let playersOutput = [];
     for (let i in self.players) {
       playersOutput.push({
+        id: self.players[i].getId(),
         active: i === self.activePlayerPosition,
         cards: self.players[i].getCards().map(mapCardsToString),
         currentState: self.players[i].getCurrentState(),
-        name: self.players[i].getName()
+        name: self.players[i].getName(),
+        position: self.players[i].getPosition(),
+        stats: self.players[i].getStats()
       });
     }
     return {
@@ -116,7 +119,13 @@ class Table {
   leave(player) {
     for (let i in this.players) {
       if (this.players[i] === player) {
+        if (player.getCurrentState() === player.getPossibleStates().DECIDING) {
+          this.nextPlayer();
+        }
         this.players.splice(i, 1);
+        if (this.players.length === 0) {
+          this.reset();
+        }
         return true;
       }
     }
@@ -201,7 +210,7 @@ class Table {
 
       // called once when next player is up
       case GAME_STATES.NEXT_PLAYER:
-        if (++self.activePlayerPosition === self.players.length) {
+        if (++self.activePlayerPosition >= self.players.length) {
           this.currentState = GAME_STATES.COMPARING;
         }
         else {

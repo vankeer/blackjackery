@@ -16,6 +16,12 @@ angular.module('blackjackeryApp')
       Game.refresh(data.gameState);
     });
 
+    socket.on('waiting', function (data) {
+      $log.info('Waiting for next game');
+      Game.setCurrentPlayer(data.currentPlayer);
+      Game.refresh(data.gameState);
+    });
+
     socket.on('starting', function(data) {
       $log.info('Game starting');
       Game.refresh(data.gameState);

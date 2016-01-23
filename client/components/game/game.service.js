@@ -32,6 +32,14 @@ angular.module('blackjackeryApp')
       gameState.activePlayerPosition = gs.activePlayerPosition;
       gameState.dealer = gs.dealer;
       gameState.players = gs.players;
+
+      // check position
+      var i;
+      for (i in gameState.players) {
+        if (gameState.players[i].id === currentPlayer.id) {
+          currentPlayer.position = gameState.players[i].position;
+        }
+      }
     }
 
     // PUBLIC API

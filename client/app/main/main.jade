@@ -37,7 +37,7 @@
             | {{player.name}}
           p.list-group-item-text {{player.currentState}}
 
-  .row
+  .row(ng-if="main.getGameState().activePlayerPosition == main.getCurrentPlayer().position")
     .col-lg-8.col-lg-offset-2
       .btn-group.btn-group-justified(role="group")
         .btn-group(role="group")

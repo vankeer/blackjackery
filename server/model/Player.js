@@ -32,10 +32,18 @@ class Player {
     this.name = options.name || faker.name.firstName();
     this.position = options.position || -1;
 
+    this.id = +new Date();
     this.stats = {
       wins: 0,
       losses: 0
     };
+  }
+
+  /**
+   * @returns {number} id
+   */
+  getId() {
+    return this.id;
   }
 
   /**

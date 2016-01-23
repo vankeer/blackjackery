@@ -4,14 +4,17 @@
 
 class MainController {
 
-  constructor($http) {
-    this.$http = $http;
-    this.awesomeThings = [];
-
-    $http.get('/api/things').then(response => {
-      this.awesomeThings = response.data;
-    });
+  constructor(Game) {
+    this.getCurrentPlayer = Game.getCurrentPlayer;
+    this.getGameState = Game.getGameState;
   }
+
+  hit() {
+  }
+
+  stick() {
+  }
+
 }
 
 angular.module('blackjackeryApp')

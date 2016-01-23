@@ -1,18 +1,47 @@
-navbar
-
-header#banner.hero-unit
-  .container
-    h1 'Allo, 'Allo!
-    p.lead Kick-start your next web app with Angular Fullstack
-    img(src='assets/images/yeoman.png', alt='I\'m Yeoman')
-
 .container
+
   .row
-    .col-lg-12
-      h1.page-header Features:
-      ul.nav.nav-tabs.nav-stacked.col-md-4.col-lg-4.col-sm-6(ng-repeat='thing in main.awesomeThings')
-        li
-          a(href='#', tooltip='{{thing.info}}')
-            | {{thing.name}}
+    .col-lg-8.col-lg-offset-2
+      h1.page-header.text-center Blackjackery
+
+  .row(ng-if="main.getGameState().msg")
+    .col-lg-8.col-lg-offset-2
+      .alert.alert-info(role="alert" ng-bind="main.getGameState().msg")
+
+  .row
+    .col-lg-8.col-lg-offset-2
+      .list-group
+        .list-group-item
+          span.badge.blackjackery-card(
+            ng-if="main.getGameState().dealer.cards.length > 0"
+            ng-repeat="card in main.getGameState().dealer.cards"
+            ng-bind-html="card"
+          )
+          h4.list-group-item-heading Dealer
+
+  .row
+    .col-lg-8.col-lg-offset-2
+      .list-group
+        .list-group-item(
+          ng-repeat="player in main.getGameState().players"
+          ng-class="{'active': $index === main.getGameState().activePlayerPosition}"
+        )
+          span.badge.blackjackery-card(
+            ng-if="player.cards.length > 0"
+            ng-repeat="card in player.cards"
+            ng-bind-html="card"
+          )
+          h4.list-group-item-heading
+            span(ng-if="player.name === main.getCurrentPlayer().name") (Me)&nbsp;
+            | {{player.name}}
+          p.list-group-item-text {{player.currentState}}
+
+  .row
+    .col-lg-8.col-lg-offset-2
+      .btn-group.btn-group-justified(role="group")
+        .btn-group(role="group")
+          button.btn.btn-primary(type="button" ng-click="main.hit()") Hit
+        .btn-group(role="group")
+          button.btn.btn-danger(type="button" ng-click="main.stick()") Stick
 
 footer

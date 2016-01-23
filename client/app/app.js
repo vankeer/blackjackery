@@ -6,7 +6,8 @@ angular.module('blackjackeryApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'btford.socket-io'
 ])
   .config(function($urlRouterProvider, $locationProvider) {
     $urlRouterProvider

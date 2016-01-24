@@ -79,6 +79,7 @@ The dealer.socket.js handler checks the game state every X ms and changes the ga
 High prio
 
  - Timer for actions (otherwise players can join and block the game)
+ - Customized dealer / end of game feedback per player
  - Show timers realtime
  - Show value of current hand
  - Show stats: player and dealer scores

@@ -12,12 +12,16 @@ const GAME_STATES = {
   STARTING: 'starting',
   ACTING: 'acting',
   NEXT_PLAYER: 'turn',
+  DEALER_REVEAL: 'dealerReveal',
+  DEALER_TURN: 'dealerTurn',
+  DEALING: 'dealing',
   COMPARING: 'comparing',
   FINISHED: 'finished',
   RESTARTING: 'restarting'
 };
 
 const TIME_UNTIL_NEXT_GAME = 5000;
+const DEALING_TIME = 2000;
 
 class Table {
 
@@ -200,7 +204,8 @@ class Table {
    * @returns {string|boolean} event to broadcast
    */
   tick() {
-    let self = this;
+    let self = this,
+        dealerScore = 0;
     switch (self.currentState) {
 
       // called repeatedly as long as there are no players
@@ -212,21 +217,21 @@ class Table {
 
       // called once when starting up a new game
       case GAME_STATES.STARTING:
-        this.currentState = GAME_STATES.NEXT_PLAYER;
+        self.currentState = GAME_STATES.NEXT_PLAYER;
         return GAME_STATES.STARTING;
 
       // called once when next player is up
       case GAME_STATES.NEXT_PLAYER:
         if (++self.activePlayerPosition >= self.players.length) {
-          this.currentState = GAME_STATES.COMPARING;
+          self.currentState = GAME_STATES.DEALER_REVEAL;
         }
         else {
           if (self.players[self.activePlayerPosition].hasLeft()) {
-            this.nextPlayer();
+            self.nextPlayer();
           }
           else {
             self.players[self.activePlayerPosition].startActing();
-            this.currentState = GAME_STATES.ACTING;
+            self.currentState = GAME_STATES.ACTING;
           }
         }
         return GAME_STATES.NEXT_PLAYER;
@@ -235,15 +240,50 @@ class Table {
       case GAME_STATES.ACTING:
         return false;
 
+      // called when the dealer is revealing his cards
+      case GAME_STATES.DEALER_REVEAL:
+        dealerScore = self.dealer.calculateScore();
+        self.dealer.showAllCards();
+        if (dealerScore < 17) {
+          self.currentState = GAME_STATES.DEALING;
+          setTimeout(function() {
+            self.currentState = GAME_STATES.DEALER_TURN
+          }, DEALING_TIME);
+        }
+        else {
+          self.currentState = GAME_STATES.DEALING;
+          setTimeout(function() {
+            self.currentState = GAME_STATES.COMPARING;
+          }, DEALING_TIME);
+        }
+        return GAME_STATES.DEALER_REVEAL;
+
+      // called when the dealer is "dealing" (to build suspense)
+      case GAME_STATES.DEALING:
+        return false;
+
+      // called when the dealer dealt a card to himself
+      case GAME_STATES.DEALER_TURN:
+        self.dealer.hit(self);
+        dealerScore = self.dealer.calculateScore();
+        if (dealerScore < 17) {
+          self.currentState = GAME_STATES.DEALING;
+          setTimeout(function() {
+            self.currentState = GAME_STATES.DEALER_TURN
+          }, DEALING_TIME);
+        }
+        else {
+          self.currentState = GAME_STATES.DEALING;
+          setTimeout(function() {
+            self.currentState = GAME_STATES.COMPARING;
+          }, DEALING_TIME);
+        }
+        return GAME_STATES.DEALER_TURN;
+
       // called at end of game when at least 1 player is sticking
       // compare scores with dealer
       case GAME_STATES.COMPARING:
-        let dealerScore = self.dealer.calculateScore();
-        self.dealer.showAllCards();
-        while (dealerScore < 17) {
-          let card = self.dealer.hit(self);
-          dealerScore = self.dealer.calculateScore();
-        }
+        dealerScore = self.dealer.calculateScore();
         self.players.forEach(function(player) {
           let playerScore = player.calculateScore();
           if (dealerScore > 21) {
@@ -273,7 +313,13 @@ class Table {
             }
           }
         });
-        self.currentState = GAME_STATES.FINISHED;
+
+        // TODO another state when transitioning from comparing to finished
+        self.currentState = GAME_STATES.DEALING;
+        setTimeout(function() {
+          self.currentState = GAME_STATES.FINISHED
+        }, DEALING_TIME);
+
         return GAME_STATES.COMPARING;
 
       // should be called once at end of every game, to restart:

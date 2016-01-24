@@ -53,6 +53,18 @@ angular.module('blackjackeryApp')
       Game.refresh(data.gameState);
     });
 
+    socket.on('dealerReveal', function(data) {
+      $log.info('Revealing dealer cards');
+      Game.setMsg('Revealing dealer cards...');
+      Game.refresh(data.gameState);
+    });
+
+    socket.on('dealerTurn', function(data) {
+      $log.info('Dealer hits');
+      Game.setMsg('Dealer hits...');
+      Game.refresh(data.gameState);
+    });
+
     socket.on('comparing', function(data) {
       $log.info('Comparing');
       Game.setMsg('Comparing scores...');

@@ -4,9 +4,13 @@ A simplified multiplayer blackjack webgame written in ES6 using AngularJS and Ex
 
 Made as an exercise in rapid prototyping, WebSockets, and using the (M)EAN stack to create a functional MVP in hours.
 
+![Screenshot v0](https://cloud.githubusercontent.com/assets/4358650/12536225/9a5d50a0-c29f-11e5-8490-dbc05a439cc9.png)
+
 ## Demo
 
 [Click here for a demo](https://blackjackery.herokuapp.com/)
+
+(currently best played on desktop or tablet)
 
 ## Installation and Use
 
@@ -75,6 +79,7 @@ The dealer.socket.js handler checks the game state every X ms and changes the ga
 High prio
 
  - Timer for actions (otherwise players can join and block the game)
+ - Show timers realtime
  - Show value of current hand
  - Show stats: player and dealer scores
  - Cards: responsive layout (not good in mobile)

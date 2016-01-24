@@ -122,12 +122,29 @@ class Table {
    * @param {Player} player
    */
   leave(player) {
+    let goToNextPlayer = false;
     if (player.getCurrentState() === player.getPossibleStates().DECIDING) {
       player.leave();
-      this.nextPlayer();
+      goToNextPlayer = true;
     }
     else {
       player.leave();
+    }
+    // check if there are still players left
+    let stillPlaying = false;
+    for (let p of this.players) {
+      if (!p.hasLeft()) {
+        stillPlaying = true;
+        break;
+      }
+    }
+    if (stillPlaying) {
+      if (goToNextPlayer) {
+        this.nextPlayer();
+      }
+    }
+    else {
+      this.reset();
     }
   }
 

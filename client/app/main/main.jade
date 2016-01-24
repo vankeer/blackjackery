@@ -33,7 +33,7 @@
             ng-bind-html="card"
           )
           h4.list-group-item-heading
-            span(ng-if="player.name === main.getCurrentPlayer().name") (Me)&nbsp;
+            span(ng-if="player.name === main.getCurrentPlayer().name") (You)&nbsp;
             | {{player.name}}
           p.list-group-item-text {{player.currentState}}
 

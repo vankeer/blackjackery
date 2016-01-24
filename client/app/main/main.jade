@@ -4,9 +4,9 @@
     .col-lg-8.col-lg-offset-2
       h1.page-header.text-center Blackjackery
 
-  .row(ng-if="main.getGameState().msg")
+  .row(ng-if="main.getMsg()")
     .col-lg-8.col-lg-offset-2
-      .alert.alert-info(role="alert" ng-bind="main.getGameState().msg")
+      .alert.alert-info(role="alert" ng-bind="main.getMsg()")
 
   .row
     .col-lg-8.col-lg-offset-2

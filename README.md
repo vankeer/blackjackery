@@ -76,12 +76,13 @@ High prio
 
  - Timer for actions (otherwise players can join and block the game)
  - Show value of current hand
- - Show player and dealer scores
- - Show system messages
+ - Show stats: player and dealer scores
+ - Cards: responsive layout (not good in mobile)
 
 Medium
 
 - Better UI (flash changes to model)
+- Card colors
 - Show people in wait queue
 
 Low prio

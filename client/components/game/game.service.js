@@ -8,6 +8,8 @@ angular.module('blackjackeryApp')
 
     let currentPlayer = {};
 
+    let msg = '';
+
     let gameState = {
       activePlayerPosition: -1,
       dealer: {},
@@ -22,6 +24,14 @@ angular.module('blackjackeryApp')
 
     function setCurrentPlayer(p) {
       currentPlayer = p;
+    }
+
+    function getMsg() {
+      return msg;
+    }
+
+    function setMsg(m) {
+      msg = m;
     }
 
     function getGameState() {
@@ -47,6 +57,8 @@ angular.module('blackjackeryApp')
     return {
       getCurrentPlayer: getCurrentPlayer,
       setCurrentPlayer: setCurrentPlayer,
+      getMsg: getMsg,
+      setMsg: setMsg,
       getGameState: getGameState,
       refresh: refresh
     };

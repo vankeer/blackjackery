@@ -49,10 +49,10 @@ module.exports = function(socket) {
     if (socket.player.stick(Game.table)) {
       console.log(socket.player.getName() + ' sticks');
       let gameState = Game.getState();
-      socket.emit('hit', {
+      socket.emit('stick', {
         gameState: gameState
       });
-      socket.broadcast.emit('hit', {
+      socket.broadcast.emit('stick', {
         gameState: gameState
       });
     }

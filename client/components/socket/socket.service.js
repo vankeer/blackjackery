@@ -12,48 +12,56 @@ angular.module('blackjackeryApp')
 
     socket.on('joining', function (data) {
       $log.info('Joined game');
+      Game.setMsg('Welcome to the game!');
       Game.setCurrentPlayer(data.currentPlayer);
       Game.refresh(data.gameState);
     });
 
     socket.on('waiting', function (data) {
       $log.info('Waiting for next game');
+      Game.setMsg('Waiting for next game...');
       Game.setCurrentPlayer(data.currentPlayer);
       Game.refresh(data.gameState);
     });
 
     socket.on('starting', function(data) {
       $log.info('Game starting');
+      Game.setMsg('New game is starting!');
       Game.refresh(data.gameState);
     });
 
     socket.on('turn', function(data) {
       $log.info('Next player');
+      if (data.gameState.activePlayerPosition === Game.getCurrentPlayer().position) {
+        Game.setMsg('You are up! Please choose an action.');
+      }
+      else {
+        Game.setMsg('Next player...');
+      }
       Game.refresh(data.gameState);
     });
 
     socket.on('hit', function(data) {
       $log.info('Hit');
+      Game.setMsg('Player hits');
       Game.refresh(data.gameState);
     });
 
     socket.on('stick', function(data) {
       $log.info('Stick');
+      Game.setMsg('Player sticks');
       Game.refresh(data.gameState);
     });
 
     socket.on('comparing', function(data) {
       $log.info('Comparing');
-      Game.refresh(data.gameState);
-    });
-
-    socket.on('bust', function(data) {
-      $log.info('All players bust');
+      Game.setMsg('Comparing scores...');
       Game.refresh(data.gameState);
     });
 
     socket.on('finished', function(data) {
       $log.info('Game finished');
+      Game.setMsg('Game finished! A new game will start in 5 seconds.');
       Game.refresh(data.gameState);
     });
 

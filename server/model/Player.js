@@ -13,7 +13,8 @@ const PLAYER_STATES = {
   STICK: 'Stick',
   BUST: 'Bust',
   WIN: 'Wins',
-  LOSE: 'Loses'
+  LOSE: 'Loses',
+  LEFT: 'Lost connection'
 };
 
 class Player {
@@ -96,6 +97,17 @@ class Player {
     this.position = position;
   }
 
+  leave() {
+    this.currentState = PLAYER_STATES.LEFT;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  hasLeft() {
+    return this.currentState === PLAYER_STATES.LEFT;
+  }
+
   /**
    * Sets currentState to "waiting to play".
    */
@@ -103,9 +115,10 @@ class Player {
     this.currentState = PLAYER_STATES.WAITING_TO_PLAY;
   }
 
-  newGame() {
+  newGame(position = -1) {
     this.cards.length = 0;
     this.currentState = PLAYER_STATES.WAITING_TO_ACT;
+    this.position = position;
   }
 
   /**
@@ -203,16 +216,20 @@ class Player {
    * Player loses, adjust score and state
    */
   lose() {
-    this.currentState = PLAYER_STATES.LOSE;
     this.stats.losses++;
+    if (this.currentState !== PLAYER_STATES.LEFT) {
+      this.currentState = PLAYER_STATES.LOSE;
+    }
   }
 
   /**
    * Player wins, adjust score and state
    */
   win() {
-    this.currentState = PLAYER_STATES.WIN;
     this.stats.wins++;
+    if (this.currentState !== PLAYER_STATES.LEFT) {
+      this.currentState = PLAYER_STATES.WIN;
+    }
   }
 
 }

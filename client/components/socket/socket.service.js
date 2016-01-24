@@ -57,6 +57,11 @@ angular.module('blackjackeryApp')
       Game.refresh(data.gameState);
     });
 
+    socket.on('disconnected', function(data) {
+      $log.info('Player disconnected');
+      Game.refresh(data.gameState);
+    });
+
     return {
       socket,
 

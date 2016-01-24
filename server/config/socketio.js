@@ -8,7 +8,9 @@ import config from './environment';
 // When the user disconnects.. perform this
 function onDisconnect(socket) {
   socket.Game.leave(socket.player);
-  // TODO broadcast this event
+  socket.broadcast.emit('disconnected', {
+    gameState: socket.Game.getState()
+  });
 }
 
 // When the user connects.. perform this

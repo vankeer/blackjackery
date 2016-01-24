@@ -17,6 +17,8 @@ const GAME_STATES = {
   RESTARTING: 'restarting'
 };
 
+const TIME_UNTIL_NEXT_GAME = 5000;
+
 class Table {
 
   /**
@@ -114,46 +116,51 @@ class Table {
 
   /**
    * @param {Player} player
-   * @returns {boolean} was able or to leave or not
    */
   leave(player) {
-    for (let i in this.players) {
-      if (this.players[i] === player) {
-        if (player.getCurrentState() === player.getPossibleStates().DECIDING) {
-          this.nextPlayer();
-        }
-        this.players.splice(i, 1);
-        if (this.players.length === 0) {
-          this.reset();
-        }
-        return true;
-      }
+    if (player.getCurrentState() === player.getPossibleStates().DECIDING) {
+      player.leave();
+      this.nextPlayer();
     }
-    for (let i in this.waiting) {
-      if (this.waiting[i] === player) {
-        this.waiting.splice(i, 1);
-        return true;
-      }
+    else {
+      player.leave();
     }
-    return false;
   }
 
   newGame() {
-    this.activePlayerPosition = -1;
-    this.currentState = GAME_STATES.STARTING;
-    this.dealer.newGame();
+
+    // remove players who left
+    for (let i = this.players.length - 1; i >= 0; i--) {
+      if (this.players[i].getCurrentState() === this.players[i].getPossibleStates().LEFT) {
+        this.players.splice(i, 1);
+      }
+    }
+    for (let i = this.waiting.length - 1; i >= 0; i--) {
+      if (this.waiting[i].getCurrentState() === this.waiting[i].getPossibleStates().LEFT) {
+        this.waiting.splice(i, 1);
+      }
+    }
 
     // move players from wait queue to playing
     while (this.waiting.length > 0 && this.players.length < this.maxPlayers) {
       let newPlayer = this.waiting.shift(),
-          newPosition = this.players.length;
+        newPosition = this.players.length;
       this.players.push(newPlayer);
       newPlayer.join(newPosition);
     }
 
-    this.players.forEach(function(p) {
-      p.newGame();
-    });
+    // still players left?
+    if (this.players.length === 0) {
+      return;
+    }
+
+    // start new game
+    this.activePlayerPosition = -1;
+    this.currentState = GAME_STATES.STARTING;
+    this.dealer.newGame();
+    for (let pos = 0; pos < this.players.length; pos++) {
+      this.players[pos].newGame(pos);
+    }
     this.deck.refresh();
     this.deal();
   }
@@ -214,8 +221,13 @@ class Table {
           this.currentState = GAME_STATES.COMPARING;
         }
         else {
-          self.players[self.activePlayerPosition].startActing();
-          this.currentState = GAME_STATES.ACTING;
+          if (self.players[self.activePlayerPosition].hasLeft()) {
+            this.nextPlayer();
+          }
+          else {
+            self.players[self.activePlayerPosition].startActing();
+            this.currentState = GAME_STATES.ACTING;
+          }
         }
         return GAME_STATES.NEXT_PLAYER;
 
@@ -270,7 +282,7 @@ class Table {
         self.currentState = GAME_STATES.RESTARTING;
         setTimeout(function() {
           self.currentState = GAME_STATES.WAITING;
-        }, 3000);
+        }, TIME_UNTIL_NEXT_GAME);
         return GAME_STATES.FINISHED;
 
       // called when timeout running:
